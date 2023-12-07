@@ -1,8 +1,8 @@
 function findAadhaarNumbers() {
-    // Get raw text from the textarea
+    
     var rawText = document.getElementById("rawTextInput").value;
 
-    // Make a request to the API
+  
     fetch("/api/Aadhaar/FindAadhaar", {
         method: "POST",
         headers: {
@@ -12,7 +12,7 @@ function findAadhaarNumbers() {
     })
         .then(response => response.json())
         .then(data => {
-            // Update the listbox with the extracted Aadhaar numbers
+           
             var aadhaarList = document.getElementById("aadhaarList");
             aadhaarList.innerHTML = "";
 

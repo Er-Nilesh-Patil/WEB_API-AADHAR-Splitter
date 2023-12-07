@@ -12,7 +12,7 @@ namespace AadhaarSplitterAPI.Controllers
     {
         private readonly IAdharService _aadhaarService;
 
-        // Constructor injection to initialize the service
+        
         public AadhaarController(IAdharService aadhaarService)
         {
             _aadhaarService = aadhaarService;
@@ -23,15 +23,15 @@ namespace AadhaarSplitterAPI.Controllers
         {
             try
             {
-                // Implement the FindAadhaar function logic here
+                
                 List<string> aadhaarNumbers = _aadhaarService.ExtractAadhaarNumbers(rawText);
 
-                // Return a list of Aadhaar numbers with a 200 (OK) status
+                
                 return Ok(aadhaarNumbers);
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately and return a 400 (Bad Request) status
+                
                 return BadRequest($"An error occurred: {ex.Message}");
             }
         }

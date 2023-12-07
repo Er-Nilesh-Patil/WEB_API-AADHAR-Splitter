@@ -14,23 +14,23 @@ using System.Text.RegularExpressions;
         {
             public List<string> ExtractAadhaarNumbers(string rawText)
             {
-                // Implement the Aadhaar number extraction logic with validation
+                
 
-                // Regular expression to match 12-digit Aadhaar numbers
+                
                 string pattern = @"\b\d{12}\b";
                 Regex regex = new Regex(pattern);
 
-                // Extract all matches
+               
                 MatchCollection matches = regex.Matches(rawText);
 
-                // Validate and manipulate matches if needed
+               
                 List<string> validAadhaarNumbers = new List<string>();
                 foreach (Match match in matches)
                 {
-                    // Validate and manipulate Aadhaar numbers using additional validations
+                    
                     string aadhaarNumber = ValidateAndManipulate(match.Value);
 
-                    // Additional validation: Check if Aadhaar number is valid
+                   
                     if (IsValidAadhaarNumber(aadhaarNumber))
                     {
                         validAadhaarNumbers.Add(aadhaarNumber);
@@ -42,25 +42,22 @@ using System.Text.RegularExpressions;
 
             private string ValidateAndManipulate(string aadhaarNumber)
             {
-                // Implement Aadhaar number validation and manipulation logic
-                // e.g., using the specified char-to-number manipulator
-
-                // For simplicity, assuming a direct mapping
+                
                 aadhaarNumber = aadhaarNumber.Replace('O', '0').Replace('B', '3').Replace('Z', '2').Replace('I', '1');
 
                 return aadhaarNumber;
             }
 
-            // Additional validation method: Check if Aadhaar number is valid
+           
             private bool IsValidAadhaarNumber(string aadhaarNumber)
             {
-                // Validation 1: Check if Aadhaar number is a 12-digit number
+                
                 if (!Is12DigitNumber(aadhaarNumber))
                 {
                     return false;
                 }
 
-                // Validation 2: Cross-verify with the Verhoeff algorithm
+                
                 if (!VerifyWithVerhoeff(aadhaarNumber))
                 {
                     return false;
@@ -68,20 +65,20 @@ using System.Text.RegularExpressions;
 
                 // Additional validations can be added here
 
-                // If all validations pass, return true
+               
                 return true;
             }
 
             private bool Is12DigitNumber(string aadhaarNumber)
             {
-                // Check if Aadhaar number is a 12-digit number using regular expression
+               
                 string pattern = @"^\d{12}$";
                 return Regex.IsMatch(aadhaarNumber, pattern);
             }
 
             private bool VerifyWithVerhoeff(string aadhaarNumber)
             {
-                // Verhoeff algorithm verification logic
+                
                 int[][] d = {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 new int[] {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
