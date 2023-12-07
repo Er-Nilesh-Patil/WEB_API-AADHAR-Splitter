@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Number Extractor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Aadhaar Number Extractor</h1>
+
+        <label for="rawTextInput">Enter Raw Text:</label>
+        <textarea id="rawTextInput" rows="5" cols="50"></textarea>
+
+        <br />
+
+        <button onclick="findAadhaarNumbers()">Extract Aadhaar Numbers</button>
+
+        <br />
+
+        <label for="aadhaarList">Extracted Aadhaar Numbers:</label>
+        <select id="aadhaarList" multiple></select>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
