@@ -1,85 +1,75 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-   namespace AadhaarSplitterAPI.Services
+namespace AadhaarSplitterAPI.Services
+{
+    public interface IAadhaarService
     {
-        public interface IAdharService
+        List<string> ExtractAadhaarNumbers(string rawText);
+    }
+
+    public class AadhaarService : IAadhaarService
+    {
+        public List<string> ExtractAadhaarNumbers(string rawText)
         {
-            List<string> ExtractAadhaarNumbers(string rawText);
+            string pattern = @"\b\d{12}\b";
+            Regex regex = new Regex(pattern);
+
+            MatchCollection matches = regex.Matches(rawText);
+
+            List<string> validAadhaarNumbers = new List<string>();
+            foreach (Match match in matches)
+            {
+                string aadhaarNumber = ValidateAndManipulate(match.Value);
+
+                if (IsValidAadhaarNumber(aadhaarNumber))
+                {
+                    validAadhaarNumbers.Add(aadhaarNumber);
+                }
+            }
+
+           // Console.WriteLine("Extracted Aadhaar numbers: " + string.Join(", ", validAadhaarNumbers));
+            return validAadhaarNumbers;
         }
 
-        public class AadhaarService : IAdharService
+        private string ValidateAndManipulate(string aadhaarNumber)
         {
-            public List<string> ExtractAadhaarNumbers(string rawText)
+            aadhaarNumber = aadhaarNumber
+                .Replace('O', '0')
+                .Replace('B', '3')
+                .Replace('Z', '2')
+                .Replace('I', '1');
+
+            return aadhaarNumber;
+        }
+
+        private bool IsValidAadhaarNumber(string aadhaarNumber)
+        {
+            if (!Is12DigitNumber(aadhaarNumber))
             {
-                
-
-                
-                string pattern = @"\b\d{12}\b";
-                Regex regex = new Regex(pattern);
-
-               
-                MatchCollection matches = regex.Matches(rawText);
-
-               
-                List<string> validAadhaarNumbers = new List<string>();
-                foreach (Match match in matches)
-                {
-                    
-                    string aadhaarNumber = ValidateAndManipulate(match.Value);
-
-                   
-                    if (IsValidAadhaarNumber(aadhaarNumber))
-                    {
-                        validAadhaarNumbers.Add(aadhaarNumber);
-                    }
-                }
-
-                return validAadhaarNumbers;
+                return false;
             }
 
-            private string ValidateAndManipulate(string aadhaarNumber)
+            if (!VerifyWithVerhoeff(aadhaarNumber))
             {
-                
-                aadhaarNumber = aadhaarNumber.Replace('O', '0').Replace('B', '3').Replace('Z', '2').Replace('I', '1');
-
-                return aadhaarNumber;
+                return false;
             }
 
-           
-            private bool IsValidAadhaarNumber(string aadhaarNumber)
-            {
-                
-                if (!Is12DigitNumber(aadhaarNumber))
-                {
-                    return false;
-                }
+            // Additional validations can be added here
 
-                
-                if (!VerifyWithVerhoeff(aadhaarNumber))
-                {
-                    return false;
-                }
+            return true;
+        }
 
-                // Additional validations can be added here
+        private bool Is12DigitNumber(string aadhaarNumber)
+        {
+            string pattern = @"^\d{12}$";
+            return Regex.IsMatch(aadhaarNumber, pattern);
+        }
 
-               
-                return true;
-            }
-
-            private bool Is12DigitNumber(string aadhaarNumber)
-            {
-               
-                string pattern = @"^\d{12}$";
-                return Regex.IsMatch(aadhaarNumber, pattern);
-            }
-
-            private bool VerifyWithVerhoeff(string aadhaarNumber)
-            {
-                
-                int[][] d = {
+        private bool VerifyWithVerhoeff(string aadhaarNumber)
+        {
+            int[][] d = {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 new int[] {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
                 new int[] {2, 3, 4, 0, 1, 7, 8, 9, 5, 6},
@@ -92,7 +82,7 @@ using System.Text.RegularExpressions;
                 new int[] {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
             };
 
-                int[][] p = {
+            int[][] p = {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 new int[] {1, 5, 7, 6, 2, 8, 3, 0, 9, 4},
                 new int[] {5, 8, 0, 3, 7, 9, 6, 1, 4, 2},
@@ -103,23 +93,21 @@ using System.Text.RegularExpressions;
                 new int[] {7, 0, 4, 6, 9, 1, 3, 2, 5, 8}
             };
 
-                int[] inv = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
+            int[] inv = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
-                int c = 0;
-                int[] myArray = new int[aadhaarNumber.Length];
-                for (int i = 0; i < aadhaarNumber.Length; i++)
-                {
-                    myArray[i] = int.Parse(aadhaarNumber[i].ToString());
-                }
-
-                for (int i = 0; i < myArray.Length; i++)
-                {
-                    c = d[c][p[i % 8][myArray[i]]];
-                }
-
-                return c == 0;
+            int c = 0;
+            int[] myArray = new int[aadhaarNumber.Length];
+            for (int i = 0; i < aadhaarNumber.Length; i++)
+            {
+                myArray[i] = int.Parse(aadhaarNumber[i].ToString());
             }
+
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                c = d[c][p[i % 8][myArray[i]]];
+            }
+
+            return c == 0;
         }
     }
-
-
+}
