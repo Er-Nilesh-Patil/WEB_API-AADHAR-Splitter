@@ -14,12 +14,25 @@ namespace AadhaarSplitterAPI.Controllers
         private readonly IAadhaarService _aadhaarService;
         private readonly ILogger<AadhaarController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AadhaarController"/> class.
+        /// </summary>
+        /// <param name="aadhaarService">The service for Aadhaar-related operations.</param>
+        /// <param name="logger">The logger for logging.</param>
         public AadhaarController(IAadhaarService aadhaarService, ILogger<AadhaarController> logger)
         {
             _aadhaarService = aadhaarService ?? throw new ArgumentNullException(nameof(aadhaarService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// API endpoint for finding Aadhaar numbers in raw text.
+        /// </summary>
+        /// <param name="rawText">The raw text input.</param>
+        /// <returns>
+        /// Returns a list of valid Aadhaar numbers if successful; otherwise, returns a BadRequest response
+        /// with an error message.
+        /// </returns>
         [HttpPost("FindAadhaar")]
         public ActionResult<List<string>> FindAadhaar([FromBody, Required] string rawText)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace AadhaarSplitterAPI.Services
 {
@@ -25,65 +26,100 @@ namespace AadhaarSplitterAPI.Services
         /// <returns>A list of valid Aadhaar numbers.</returns>
         public List<string> ExtractAadhaarNumbers(string rawText)
         {
-            string pattern = @"\b\d{12}\b";
-            Regex regex = new Regex(pattern);
-
-            MatchCollection matches = regex.Matches(rawText);
-
-            List<string> validAadhaarNumbers = new List<string>();
-            foreach (Match match in matches)
+            try
             {
-                string aadhaarNumber = ValidateAndManipulate(match.Value);
+                string pattern = @"\b\d{12}\b";
+                Regex regex = new Regex(pattern);
 
-                if (IsValidAadhaarNumber(aadhaarNumber))
+                MatchCollection matches = regex.Matches(rawText);
+
+                List<string> validAadhaarNumbers = new List<string>();
+                foreach (Match match in matches)
                 {
-                    validAadhaarNumbers.Add(aadhaarNumber);
+                    string aadhaarNumber = ValidateAndManipulate(match.Value);
+
+                    if (IsValidAadhaarNumber(aadhaarNumber))
+                    {
+                        validAadhaarNumbers.Add(aadhaarNumber);
+                    }
                 }
+
+                _logger.LogInformation("Extracted Aadhaar numbers: {AadhaarNumbers}", string.Join(", ", validAadhaarNumbers));
+
+                return validAadhaarNumbers;
             }
-
-            // Console.WriteLine("Extracted Aadhaar numbers: " + string.Join(", ", validAadhaarNumbers));
-            _logger.LogInformation("Extracted Aadhaar numbers: {AadhaarNumbers}", string.Join(", ", validAadhaarNumbers));
-
-            return validAadhaarNumbers;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error extracting Aadhaar numbers");
+                throw; // Re-throw the exception for higher-level handling
+            }
         }
 
         private string ValidateAndManipulate(string aadhaarNumber)
         {
-            aadhaarNumber = aadhaarNumber
-                .Replace('O', '0')
-                .Replace('B', '3')
-                .Replace('Z', '2')
-                .Replace('I', '1');
+            try
+            {
+                aadhaarNumber = aadhaarNumber
+                    .Replace('O', '0')
+                    .Replace('B', '3')
+                    .Replace('Z', '2')
+                    .Replace('I', '1');
 
-            return aadhaarNumber;
+                return aadhaarNumber;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating and manipulating Aadhaar number");
+                throw; // Re-throw the exception for higher-level handling
+            }
         }
 
         private bool IsValidAadhaarNumber(string aadhaarNumber)
         {
-            if (!Is12DigitNumber(aadhaarNumber))
+            try
             {
-                return false;
-            }
+                if (!Is12DigitNumber(aadhaarNumber))
+                {
+                    _logger.LogWarning("Invalid Aadhaar number length: {AadhaarNumber}", aadhaarNumber);
+                    return false;
+                }
 
-            if (!VerifyWithVerhoeff(aadhaarNumber))
+                if (!VerifyWithVerhoeff(aadhaarNumber))
+                {
+                    _logger.LogWarning("Invalid Aadhaar number: {AadhaarNumber}", aadhaarNumber);
+                    return false;
+                }
+
+                // Additional validations can be added here
+
+                return true;
+            }
+            catch (Exception ex)
             {
-                return false;
+                _logger.LogError(ex, "Error validating Aadhaar number");
+                throw; // Re-throw the exception for higher-level handling
             }
-
-            // Additional validations can be added here
-
-            return true;
         }
 
         private bool Is12DigitNumber(string aadhaarNumber)
         {
-            string pattern = @"^\d{12}$";
-            return Regex.IsMatch(aadhaarNumber, pattern);
+            try
+            {
+                string pattern = @"^\d{12}$";
+                return Regex.IsMatch(aadhaarNumber, pattern);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating Aadhaar number length");
+                throw; // Re-throw the exception for higher-level handling
+            }
         }
 
         private bool VerifyWithVerhoeff(string aadhaarNumber)
         {
-            int[][] d = {
+            try
+            {
+                int[][] d = {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 new int[] {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
                 new int[] {2, 3, 4, 0, 1, 7, 8, 9, 5, 6},
@@ -96,7 +132,7 @@ namespace AadhaarSplitterAPI.Services
                 new int[] {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
             };
 
-            int[][] p = {
+                int[][] p = {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 new int[] {1, 5, 7, 6, 2, 8, 3, 0, 9, 4},
                 new int[] {5, 8, 0, 3, 7, 9, 6, 1, 4, 2},
@@ -107,21 +143,31 @@ namespace AadhaarSplitterAPI.Services
                 new int[] {7, 0, 4, 6, 9, 1, 3, 2, 5, 8}
             };
 
-            int[] inv = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
+                int[] inv = new int[] { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
-            int c = 0;
-            int[] myArray = new int[aadhaarNumber.Length];
-            for (int i = 0; i < aadhaarNumber.Length; i++)
-            {
-                myArray[i] = int.Parse(aadhaarNumber[i].ToString());
+                int c = 0;
+                int[] myArray = new int[aadhaarNumber.Length];
+                for (int i = 0; i < aadhaarNumber.Length; i++)
+                {
+                    myArray[i] = int.Parse(aadhaarNumber[i].ToString());
+                }
+
+                for (int i = 0; i < myArray.Length; i++)
+                {
+                    c = d[c][p[i % 8][myArray[i]]];
+                }
+
+                return c == 0;
             }
-
-            for (int i = 0; i < myArray.Length; i++)
+            catch (Exception ex)
             {
-                c = d[c][p[i % 8][myArray[i]]];
+                _logger.LogError(ex, "Error verifying Aadhaar number with Verhoeff algorithm");
+                throw; // Re-throw the exception for higher-level handling
             }
-
-            return c == 0;
         }
     }
 }
+
+
+
+
