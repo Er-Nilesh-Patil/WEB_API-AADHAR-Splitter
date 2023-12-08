@@ -11,6 +11,18 @@ namespace AadhaarSplitterAPI.Services
 
     public class AadhaarService : IAadhaarService
     {
+        private readonly ILogger<AadhaarService> _logger;
+
+        public AadhaarService(ILogger<AadhaarService> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// Extracts Aadhaar numbers from the given raw text.
+        /// </summary>
+        /// <param name="rawText">The raw text to extract Aadhaar numbers from.</param>
+        /// <returns>A list of valid Aadhaar numbers.</returns>
         public List<string> ExtractAadhaarNumbers(string rawText)
         {
             string pattern = @"\b\d{12}\b";
@@ -29,7 +41,9 @@ namespace AadhaarSplitterAPI.Services
                 }
             }
 
-           // Console.WriteLine("Extracted Aadhaar numbers: " + string.Join(", ", validAadhaarNumbers));
+            // Console.WriteLine("Extracted Aadhaar numbers: " + string.Join(", ", validAadhaarNumbers));
+            _logger.LogInformation("Extracted Aadhaar numbers: {AadhaarNumbers}", string.Join(", ", validAadhaarNumbers));
+
             return validAadhaarNumbers;
         }
 

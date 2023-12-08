@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace AadhaarSplitterAPI.Controllers
 {
@@ -22,10 +21,10 @@ namespace AadhaarSplitterAPI.Controllers
         }
 
         [HttpPost("FindAadhaar")]
-        public ActionResult<List<string>> FindAadhaar([FromBody] string rawText)
+        public ActionResult<List<string>> FindAadhaar([FromBody, Required] string rawText)
         {
             try
-            {               
+            {
                 if (string.IsNullOrWhiteSpace(rawText))
                 {
                     _logger.LogError("Raw text is empty or null.");
@@ -38,9 +37,12 @@ namespace AadhaarSplitterAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while processing Aadhaar numbers.");
+                _logger.LogError(ex, "An error occurred while processing Aadhaar numbers. Raw Text: {RawText}", rawText);
                 return BadRequest($"An error occurred: {ex.Message}");
             }
         }
     }
 }
+
+
+
