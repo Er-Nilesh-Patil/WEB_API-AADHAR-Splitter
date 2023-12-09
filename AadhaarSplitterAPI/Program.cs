@@ -3,18 +3,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AadhaarSplitterAPI.Services;
-using AadhaarSplitterAPI.Data;
+//using AadhaarSplitterAPI.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddDbContext<AppDbContext>(option =>
+/*builder.Services.AddDbContext<AadhaarDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+*/
 // Dependency Injection
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();

@@ -24,23 +24,69 @@ namespace AadhaarSplitterAPI.Services
         /// </summary>
         /// <param name="rawText">The raw text to extract Aadhaar numbers from.</param>
         /// <returns>A list of valid Aadhaar numbers.</returns>
+      
+        
+        /*        public List<string> ExtractAadhaarNumbers(string rawText)
+                {
+                    try
+                    {
+                        string pattern = @"\b\d{12}\b";
+                        Regex regex = new Regex(pattern);
+
+                        MatchCollection matches = regex.Matches(rawText);
+
+                        List<string> validAadhaarNumbers = new List<string>();
+                        foreach (Match match in matches)
+                        {
+                            string aadhaarNumber = ValidateAndManipulate(match.Value);
+
+                            if (IsValidAadhaarNumber(aadhaarNumber))
+                            {
+                                validAadhaarNumbers.Add(aadhaarNumber);
+                            }
+                        }
+
+                        _logger.LogInformation("Extracted Aadhaar numbers: {AadhaarNumbers}", string.Join(", ", validAadhaarNumbers));
+
+                        return validAadhaarNumbers;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error extracting Aadhaar numbers");
+                        throw; // Re-throw the exception for higher-level handling
+                    }
+                }
+        */
+        
+        ///<summary
+         //Note that this approach assumes that Aadhaar numbers can span multiple lines and blocks
+        ///>
         public List<string> ExtractAadhaarNumbers(string rawText)
         {
             try
             {
-                string pattern = @"\b\d{12}\b";
-                Regex regex = new Regex(pattern);
-
-                MatchCollection matches = regex.Matches(rawText);
+                string[] lines = rawText.Split('\n');
 
                 List<string> validAadhaarNumbers = new List<string>();
-                foreach (Match match in matches)
-                {
-                    string aadhaarNumber = ValidateAndManipulate(match.Value);
 
-                    if (IsValidAadhaarNumber(aadhaarNumber))
-                    {
-                        validAadhaarNumbers.Add(aadhaarNumber);
+                foreach (string line in lines)
+                {
+                    
+                    string[] blocks = line.Split(' ');
+
+                    foreach (string block in blocks)
+                    {                        
+                        MatchCollection matches = Regex.Matches(block, @"\b\d{12}\b");
+
+                        foreach (Match match in matches)
+                        {
+                            string aadhaarNumber = ValidateAndManipulate(match.Value);
+
+                            if (IsValidAadhaarNumber(aadhaarNumber))
+                            {
+                                validAadhaarNumbers.Add(aadhaarNumber);
+                            }
+                        }
                     }
                 }
 

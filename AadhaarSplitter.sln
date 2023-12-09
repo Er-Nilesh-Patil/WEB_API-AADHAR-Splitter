@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AadhaarSplitterAPI", "Aadha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AadhaarSplitterTest", "..\AadhaarSplitterTest\AadhaarSplitterTest\AadhaarSplitterTest.csproj", "{68B8FEC0-0F23-46F6-9734-A296FB025F2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AadhaarSplitterShared", "..\AadhaarSplitterShared\AadhaarSplitterShared\AadhaarSplitterShared.csproj", "{74477D22-89D9-4979-94AB-1CB4BDE0F887}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AadhaarSplitterData", "..\AadhaarSplitterData\AadhaarSplitterData\AadhaarSplitterData.csproj", "{071A461D-3348-481D-9B1A-F7EC491B7F2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{68B8FEC0-0F23-46F6-9734-A296FB025F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68B8FEC0-0F23-46F6-9734-A296FB025F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68B8FEC0-0F23-46F6-9734-A296FB025F2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74477D22-89D9-4979-94AB-1CB4BDE0F887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74477D22-89D9-4979-94AB-1CB4BDE0F887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74477D22-89D9-4979-94AB-1CB4BDE0F887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74477D22-89D9-4979-94AB-1CB4BDE0F887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{071A461D-3348-481D-9B1A-F7EC491B7F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{071A461D-3348-481D-9B1A-F7EC491B7F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{071A461D-3348-481D-9B1A-F7EC491B7F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{071A461D-3348-481D-9B1A-F7EC491B7F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
