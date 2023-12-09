@@ -25,7 +25,7 @@ namespace AadhaarSplitterAPI.Services
         /// <param name="rawText">The raw text to extract Aadhaar numbers from.</param>
         /// <returns>A list of valid Aadhaar numbers.</returns>      
        
-        public List<string> ExtractAadhaarNumbers(string rawText)
+        public List<string> ExtractAadhaarNumbers(string rawText) //Note that this approach assumes that Aadhaar numbers can span multiple lines and blocks
         {
             try
             {
